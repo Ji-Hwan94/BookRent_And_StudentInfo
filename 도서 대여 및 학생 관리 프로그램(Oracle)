@@ -1,0 +1,57 @@
+CREATE table student( -- 학생 테이블을 만든다
+id VARCHAR2(7) primary key,
+name varchar2(10),
+dept varchar2(20),
+address VARCHAR2(50)
+);
+INSERT into student VALUES('1234567', '황지환', '유럽어문학과', '서울 강동구');
+
+CREATE table books  --현재 있는 책들의 목록을 가져온다
+(
+no CHAR(6 BYTE) primary key,
+TITLE VARCHAR2(50 BYTE) not null,
+AUTHOR VARCHAR2(50 BYTE) not null,
+publisher VARCHAR2(50 BYTE) not null,
+loan CHAR(10 CHAR)
+);
+
+insert into books values('000001','종이 여자','귀욤미소', '한국출판사', null);
+insert into books values('000002','보바리 부인','플로베르', '미국출판사', null);
+insert into books values('000003','타이스','아나톨 프랑스', '영국출판사', null);
+insert into books values('000004','나쁜 사마리아인','장하준', '중국출판사', null);
+insert into books values('000005','이방인','카뮈', '독일출판사', null);
+insert into books values('000006','채식주의자','한강', '일본출판사', null);
+
+create table bookRent -- 책 대여 정보를 가져온다
+( no char(10) primary key,
+  id VARCHAR2(7) not null, 
+  bookNo char(6) not null, 
+  rDate char(8) not null ,
+  constraint fk_bookrent foreign key(id)
+  references student(id)
+);
+
+INSERT into bookrent VALUES('2017071111', '1324534', '000003', '20180806');
+
+
+CREATE OR REPLACE TRIGGER TRG_loan  -- 책이 대여 되는 경우 책이 대여가 되였다고 알려준다.
+AFTER                               -- 책을 반납하는 경우, 해당 행을 삭제하면 된다.(초기값으로 돌아옴)
+INSERT OR DELETE ON bookrent 
+FOR EACH ROW
+
+BEGIN 
+IF INSERTING THEN
+UPDATE BOOKS SET 
+LOAN = 'loaned'
+WHERE books.no = :NEW.bookno;
+
+ELSIF DELETING THEN
+UPDATE BOOKS SET
+LOAN = NULL
+WHERE books.no = :OLD.bookno;
+
+END IF;
+END;
+/
+
+commit; -- 커밋
