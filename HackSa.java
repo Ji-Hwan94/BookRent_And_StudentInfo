@@ -160,7 +160,7 @@ public class HackSa extends JFrame {
             panel.revalidate(); //다시 활성화
             panel.repaint();    //다시 그리기
             try {
-				panel.add(new Book_chart());
+				panel.add(new BookChart());
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (SQLException e1) {
