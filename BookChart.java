@@ -14,11 +14,11 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.jdbc.JDBCPieDataset;
 
-public class Book_chart extends JPanel {
+public class BookChart extends JPanel {
 	Connection conn=null;
 	Statement stmt;  
 	
-	public Book_chart() throws ClassNotFoundException, SQLException {
+	public BookChart() throws ClassNotFoundException, SQLException {
 		
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 		
