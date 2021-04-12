@@ -166,9 +166,9 @@ public class HackSa extends JFrame {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			
             panel.setLayout(null); //레이아웃적용안함
-            panel.setSize(1010, 1000);
+            setSize(710, 500);
+           
             
          }
       });
