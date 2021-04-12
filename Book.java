@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -5,106 +6,129 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import javax.swing.AbstractCellEditor;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 public class Book extends JPanel {
-   DefaultTableModel model=null;
-   JTable table=null;
-   Connection conn=null;
-   
+   DefaultTableModel model = null;
+   JTable table = null;
+   Connection conn = null;
+   JButton btn = null;
    Statement stmt;  
-   String query; // sql¹®À» ºÒ·¯¿Â´Ù.
+   String query; // sqlë¬¸ì„ ë¶ˆëŸ¬ì˜¨ë‹¤.
    
    public Book() {
       
       try {
-         //DB¿¬°á
+         //DBì—°ê²°
          Class.forName("oracle.jdbc.driver.OracleDriver");
          conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
-         //System.out.println("¿¬°á¿Ï·á");
+         //System.out.println("ì—°ê²°ì™„ë£Œ");
          stmt=conn.createStatement();
-         }catch(Exception e) {
+         }
+      catch(Exception e) {
          e.printStackTrace();
          }   
 
-       setLayout(null);//·¹ÀÌ¾Æ¿ô¼³Á¤. ·¹ÀÌ¾Æ¿ô »ç¿ë ¾ÈÇÔ.
-       
-       	JLabel l_dept=new JLabel("Á¤·Ä ¼ø¼­");
-       	l_dept.setBounds(10, 10, 70, 20);
-       	add(l_dept);       
-        String[] dept={"¹øÈ£ ¼ø","µµ¼­¸í ¼ø","ÀúÀÚ ¼ø","ÃâÆÇ»ç ¼ø"};
-        JComboBox cb_dept=new JComboBox(dept);
-        cb_dept.setBounds(80, 10, 100, 20);
-        add(cb_dept);
-        cb_dept.addActionListener(new ActionListener() {
-         
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            query = "select b.no, b.TITLE, b.AUTHOR, b.publisher, b.loan " 
-            		+ "from books b ";
-            JComboBox cb=(JComboBox)e.getSource(); // ÀÌº¥Æ®°¡ ¹ß»ıÇÑ ÄŞº¸¹Ú½º ±¸ÇÏ±â
-            //µ¿Àû Äõ¸® (½ÇÇà½Ã Äõ¸®°¡ ¹Ù²ï´Ù.)
-            if(cb.getSelectedIndex()==0) {
-               //¹øÈ£ ¼ø
-               query += " order by b.no"; //¾Õ¿¡ ÇÑÄ­À» ¹«Á¶°Ç ¶ç¿î´Ù.
-            } else if(cb.getSelectedIndex() == 1) {
-               //µµ¼­¸í ¼ø
-               query += " order by b.TITLE";
-            } else if(cb.getSelectedIndex() == 2) {
-               //ÀúÀÚ ¼ø
-               query += " order by b.AUTHOR";
-            } else if(cb.getSelectedIndex() == 3) {
-               //ÃâÆÇ»ç ¼ø
-               query += " order by b.publisher";
-            }
-            
-            //¸ñ·Ï Ãâ·Â
-            list();
-         }
-      });
-        
-      String colName[]={"¹øÈ£","Á¦¸ñ","ÀúÀÚ","ÃâÆÇ»ç", "´ëÃâ ÇöÈ²"};
-       model=new DefaultTableModel(colName,0);
-       table = new JTable(model);
-       table.setPreferredScrollableViewportSize(new Dimension(470,200));
-       add(table);
-       JScrollPane sp=new JScrollPane(table);
-       sp.setBounds(10, 40, 460, 250);
-       add(sp);  
-        
-        setSize(490, 400);//È­¸éÅ©±â
-        setVisible(true);
+      setLayout(null);//ë ˆì´ì•„ì›ƒì„¤ì •. ë ˆì´ì•„ì›ƒ ì‚¬ìš© ì•ˆí•¨.
+      
+      JLabel l_dept=new JLabel("ëª¨ë“  ë„ì„œ ë³´ê¸°");
+      l_dept.setBounds(10, 10, 80, 20);
+      add(l_dept);
+  
+      String colName[]={"ë²ˆí˜¸","ì œëª©","ì €ì","ì¶œíŒì‚¬", "ëŒ€ì¶œ í˜„í™©", "ëŒ€ì¶œí•˜ê¸°"}; 
+      
+      model=new DefaultTableModel(colName,0);
+      table = new JTable(model);
+      
+      table.getColumnModel().getColumn(5).setCellRenderer(new TableCell());;
+      table.getColumnModel().getColumn(5).setCellEditor(new TableCell());;
+      
+      table.setPreferredScrollableViewportSize(new Dimension(470,200));
+      add(table);
+      JScrollPane sp=new JScrollPane(table);
+      sp.setBounds(10, 40, 460, 250);
+      add(sp);  
+      
+      query = "select b.no, b.TITLE, b.AUTHOR, b.publisher, b.loan " 
+         		+ "from books b order by b.no";  
+      list(); // ëª©ë¡ ì¶œë ¥
+      
+      setSize(490, 400);//í™”ë©´í¬ê¸°
+      setVisible(true);
    }
    
    public void list(){
        try{
-           System.out.println("¿¬°áµÇ¾ú½À´Ï´Ù.....");
-           System.out.println(query);       //Äõ¸®¹®À» Ãâ·ÂÇØº»´Ù 
-           // Select¹® ½ÇÇà     
+           System.out.println("ì—°ê²°ë˜ì—ˆìŠµë‹ˆë‹¤.....");
+           System.out.println(query);       //ì¿¼ë¦¬ë¬¸ì„ ì¶œë ¥í•´ë³¸ë‹¤ 
+           
+           // Selectë¬¸ ì‹¤í–‰     
            ResultSet rs=stmt.executeQuery(query);
           
-        //JTable ÃÊ±âÈ­
-        model.setNumRows(0);
+           //JTable ì´ˆê¸°í™”
+           model.setNumRows(0);
        
-        while(rs.next()){
-         String[] row=new String[5];//ÄÃ·³ÀÇ °¹¼ö°¡ 5
-         row[0]=rs.getString("no");
-         row[1]=rs.getString("TITLE");
-         row[2]=rs.getString("AUTHOR");
-         row[3]=rs.getString("publisher");
-         row[4]=rs.getString("loan");
-         model.addRow(row);
-        }
-        rs.close();
+           while(rs.next()){
+        	   String[] row=new String[6];//ì»¬ëŸ¼ì˜ ê°¯ìˆ˜ê°€ 5
+        	   row[0]=rs.getString("no");
+        	   row[1]=rs.getString("TITLE");
+        	   row[2]=rs.getString("AUTHOR");
+        	   row[3]=rs.getString("publisher");
+        	   row[4]=rs.getString("loan");
+        	   model.addRow(row);
+           }
+           rs.close();
        }
        catch(Exception e1){
         //e.getStackTrace();
-        System.out.println(e1.getMessage());
+    	  System.out.println(e1.getMessage());
        }                     
     }
+   
+   class TableCell extends AbstractCellEditor implements TableCellEditor, TableCellRenderer{
+
+		JButton btn;
+		
+		public TableCell() {
+			
+			btn = new JButton("ëŒ€ì¶œ");
+			
+			// ì´ ë¶€ë¶„ì—ì„œ ë²„íŠ¼ì„ ëˆ„ë¥´ëŠ” ê²½ìš° ì´ë²¤íŠ¸ë¥¼ ë°œìƒ ì‹œí‚¨ë‹¤
+			btn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println(table.getValueAt(table.getSelectedRow(), 1));
+					
+				}
+			});
+		
+		}
+		
+		@Override
+		public Object getCellEditorValue() {
+			return null;
+		}
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			return btn;
+		}
+
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+			return btn;
+		}
+		
+	}
 }
