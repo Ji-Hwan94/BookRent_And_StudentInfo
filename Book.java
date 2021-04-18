@@ -1,5 +1,6 @@
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -9,14 +10,18 @@ import java.sql.Statement;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+
+
 
 public class Book extends JPanel {
    DefaultTableModel model = null;
@@ -24,28 +29,30 @@ public class Book extends JPanel {
    Connection conn = null;
    JButton btn = null;
    Statement stmt;  
-   String query; // sqlë¬¸ì„ ë¶ˆëŸ¬ì˜¨ë‹¤.
+   String query; // sql¹®À» ºÒ·¯¿Â´Ù.
+   
+
    
    public Book() {
       
       try {
-         //DBì—°ê²°
+         //DB¿¬°á
          Class.forName("oracle.jdbc.driver.OracleDriver");
          conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
-         //System.out.println("ì—°ê²°ì™„ë£Œ");
+         //System.out.println("¿¬°á¿Ï·á");
          stmt=conn.createStatement();
          }
       catch(Exception e) {
          e.printStackTrace();
          }   
 
-      setLayout(null);//ë ˆì´ì•„ì›ƒì„¤ì •. ë ˆì´ì•„ì›ƒ ì‚¬ìš© ì•ˆí•¨.
+      setLayout(null);//·¹ÀÌ¾Æ¿ô¼³Á¤. ·¹ÀÌ¾Æ¿ô »ç¿ë ¾ÈÇÔ.
       
-      JLabel l_dept=new JLabel("ëª¨ë“  ë„ì„œ ë³´ê¸°");
+      JLabel l_dept=new JLabel("¸ğµç µµ¼­");
       l_dept.setBounds(10, 10, 80, 20);
       add(l_dept);
   
-      String colName[]={"ë²ˆí˜¸","ì œëª©","ì €ì","ì¶œíŒì‚¬", "ëŒ€ì¶œ í˜„í™©", "ëŒ€ì¶œí•˜ê¸°"}; 
+      String colName[]={"¹øÈ£","Á¦¸ñ","ÀúÀÚ","ÃâÆÇ»ç", "´ëÃâ ÇöÈ²", "´ëÃâÇÏ±â"}; 
       
       model=new DefaultTableModel(colName,0);
       table = new JTable(model);
@@ -61,25 +68,25 @@ public class Book extends JPanel {
       
       query = "select b.no, b.TITLE, b.AUTHOR, b.publisher, b.loan " 
          		+ "from books b order by b.no";  
-      list(); // ëª©ë¡ ì¶œë ¥
+      list(); // ¸ñ·Ï Ãâ·Â
       
-      setSize(490, 400);//í™”ë©´í¬ê¸°
+      setSize(490, 400);//È­¸éÅ©±â
       setVisible(true);
    }
    
    public void list(){
        try{
-           System.out.println("ì—°ê²°ë˜ì—ˆìŠµë‹ˆë‹¤.....");
-           System.out.println(query);       //ì¿¼ë¦¬ë¬¸ì„ ì¶œë ¥í•´ë³¸ë‹¤ 
+           System.out.println("¿¬°áµÇ¾ú½À´Ï´Ù.....");
+           System.out.println(query);       //Äõ¸®¹®À» Ãâ·ÂÇØº»´Ù 
            
-           // Selectë¬¸ ì‹¤í–‰     
+           // Select¹® ½ÇÇà     
            ResultSet rs=stmt.executeQuery(query);
           
-           //JTable ì´ˆê¸°í™”
+           //JTable ÃÊ±âÈ­
            model.setNumRows(0);
        
            while(rs.next()){
-        	   String[] row=new String[6];//ì»¬ëŸ¼ì˜ ê°¯ìˆ˜ê°€ 5
+        	   String[] row=new String[6];//ÄÃ·³ÀÇ °¹¼ö°¡ 5
         	   row[0]=rs.getString("no");
         	   row[1]=rs.getString("TITLE");
         	   row[2]=rs.getString("AUTHOR");
@@ -96,20 +103,19 @@ public class Book extends JPanel {
     }
    
    class TableCell extends AbstractCellEditor implements TableCellEditor, TableCellRenderer{
-
+	   	
 		JButton btn;
+		HackSa hacksa;
 		
 		public TableCell() {
-			
-			btn = new JButton("ëŒ€ì¶œ");
-			
-			// ì´ ë¶€ë¶„ì—ì„œ ë²„íŠ¼ì„ ëˆ„ë¥´ëŠ” ê²½ìš° ì´ë²¤íŠ¸ë¥¼ ë°œìƒ ì‹œí‚¨ë‹¤
+			btn = new JButton("´ëÃâ");
+			// ÀÌ ºÎºĞ¿¡¼­ ¹öÆ°À» ´©¸£´Â °æ¿ì ÀÌº¥Æ®¸¦ ¹ß»ı ½ÃÅ²´Ù
 			btn.addActionListener(new ActionListener() {
+				RentLogin dialog = new RentLogin(hacksa, "·Î±×ÀÎ");
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println(table.getValueAt(table.getSelectedRow(), 1));
-					
+					dialog.setVisible(true);
 				}
 			});
 		
