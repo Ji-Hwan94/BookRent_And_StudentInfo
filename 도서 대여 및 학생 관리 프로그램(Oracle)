@@ -39,17 +39,12 @@ create table bookRent -- 책 대여 정보를 가져온다
   references student(id)
 );
 
-insert into bookrent values('00001','1234567','000001', sysdate);
-insert into bookrent values('00002','1111111','000002', sysdate);
-insert into bookrent values('00003','1111112','000003', sysdate);
-insert into bookrent values('00004','1111113','000004', sysdate);
-insert into bookrent values('00005','1111114','000005', sysdate);
-insert into bookrent values('00006','1111115','000007', sysdate);
-insert into bookrent values('00007','1111166','000008', sysdate);
-insert into bookrent values('00008','2222222','000009', sysdate);
-insert into bookrent values('00009','2222223','000011', sysdate);
-insert into bookrent values('00010','1234567','000013', sysdate);
-
+create sequence no -- 책 대여 번호에 sequence 생성
+increment by 1
+start with 1
+maxvalue 100000
+minvalue 1
+nocycle;
 
 CREATE OR REPLACE TRIGGER TRG_loan  -- 책이 대여 되는 경우 책이 대여가 되였다고 알려준다.
 AFTER                               -- 책을 반납하는 경우, 해당 행을 삭제하면 된다.(초기값으로 돌아옴)
