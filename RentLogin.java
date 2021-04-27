@@ -30,13 +30,13 @@ class RentLogin extends JDialog {
 	
 	public RentLogin(JFrame frame, String title) {
 		
-		super(frame, title, true); //¸ğ´Ş¸®½º
+		super(frame, title, true); //ëª¨ë‹¬ë¦¬ìŠ¤
 		
 		try {
-	         //DB¿¬°á
+	         //DBì—°ê²°
 	         Class.forName("oracle.jdbc.driver.OracleDriver");
 	         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
-	         //System.out.println("¿¬°á¿Ï·á");
+	         //System.out.println("ì—°ê²°ì™„ë£Œ");
 	         stmt=conn.createStatement();
 	         }
 	      catch(Exception e) {
@@ -44,12 +44,12 @@ class RentLogin extends JDialog {
 	         }  
 		
 		setLayout(new FlowLayout());
-		JLabel nameLabel = new JLabel("ÀÌ¸§");
+		JLabel nameLabel = new JLabel("ì´ë¦„");
 		nameLabel.setBounds(10, 10, 80, 20);
 	    add(nameLabel);
 		add(name);
 		
-		JLabel idLabel = new JLabel("ÇĞ¹ø");
+		JLabel idLabel = new JLabel("í•™ë²ˆ");
 		idLabel.setBounds(40, 10, 80, 20);
 	    add(idLabel);
 		add(id);
@@ -61,11 +61,11 @@ class RentLogin extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				
 					if(name.getText().length()==0) {
-						JOptionPane.showMessageDialog(null, "ÀÌ¸§À» µî·ÏÇØÁÖ¼¼¿ä.");
+						JOptionPane.showMessageDialog(null, "ì´ë¦„ì„ ë“±ë¡í•´ì£¼ì„¸ìš”.");
 						return;
 					}
 					if(id.getText().length()==0) {
-						JOptionPane.showMessageDialog(null, "ÇĞ¹øÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä");
+						JOptionPane.showMessageDialog(null, "í•™ë²ˆì„ ì…ë ¥í•´ì£¼ì„¸ìš”");
 						return;
 					}
 					try {
@@ -77,7 +77,7 @@ class RentLogin extends JDialog {
 		               while(rs.next()) {
 		            	   
 			               System.out.println(rs.getString("id"));
-		            	   stmt.executeUpdate("insert into bookrent values('00011','"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
+		            	   stmt.executeUpdate("insert into bookrent values(NO.nextval,'"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
 		            	   
 		            	   
 		               }
