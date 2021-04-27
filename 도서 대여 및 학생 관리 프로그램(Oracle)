@@ -21,6 +21,14 @@ insert into books values('000003','타이스','아나톨 프랑스', '영국출�
 insert into books values('000004','나쁜 사마리아인','장하준', '중국출판사', null);
 insert into books values('000005','이방인','카뮈', '독일출판사', null);
 insert into books values('000006','채식주의자','한강', '일본출판사', null);
+insert into books values('000007','춘향전','작자 미상', '한국출판사', null);
+insert into books values('000008','노인과 바다','헤밍웨이', '미국출판사', null);
+insert into books values('000009','파우스트','괴테', '독일출판사', null);
+insert into books values('000010','꿈의 해석','프로스트', '오스트리아출판사', null);
+insert into books values('000011','젊은 베르테르의 슬픔','괴테', '독일출판사', null);
+insert into books values('000012','웃음','베르베르', '프랑스출판사', null);
+insert into books values('000013','자기 앞의 생','에밀 아자르', '벨기에출판사', null);
+
 
 create table bookRent -- 책 대여 정보를 가져온다
 ( no char(10) primary key,
@@ -31,7 +39,16 @@ create table bookRent -- 책 대여 정보를 가져온다
   references student(id)
 );
 
-INSERT into bookrent VALUES('2017071111', '1324534', '000003', '20180806');
+insert into bookrent values('00001','1234567','000001', sysdate);
+insert into bookrent values('00002','1111111','000002', sysdate);
+insert into bookrent values('00003','1111112','000003', sysdate);
+insert into bookrent values('00004','1111113','000004', sysdate);
+insert into bookrent values('00005','1111114','000005', sysdate);
+insert into bookrent values('00006','1111115','000007', sysdate);
+insert into bookrent values('00007','1111166','000008', sysdate);
+insert into bookrent values('00008','2222222','000009', sysdate);
+insert into bookrent values('00009','2222223','000011', sysdate);
+insert into bookrent values('00010','1234567','000013', sysdate);
 
 
 CREATE OR REPLACE TRIGGER TRG_loan  -- 책이 대여 되는 경우 책이 대여가 되였다고 알려준다.
