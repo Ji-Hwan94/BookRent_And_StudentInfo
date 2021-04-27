@@ -20,8 +20,6 @@ class RentLogin extends JDialog {
 	private JTextField id = new JTextField(10);
 	private JButton okBtn = new JButton("Ok");
 	
-//	Book book;
-	
 	Connection conn = null;
 	JButton btn = null;
 	Statement stmt;  
@@ -67,7 +65,10 @@ class RentLogin extends JDialog {
 					if(id.getText().length()==0) {
 						JOptionPane.showMessageDialog(null, "학번을 입력해주세요");
 						return;
-					}
+					} 
+					
+					JOptionPane.showMessageDialog(null, "대출 되었습니다.");
+					
 					try {
 		               Statement stmt = conn.createStatement();
 		               ResultSet rs = stmt.executeQuery("select*from student where name = '"+name.getText()+"'"); 
@@ -79,7 +80,6 @@ class RentLogin extends JDialog {
 			               System.out.println(rs.getString("id"));
 		            	   stmt.executeUpdate("insert into bookrent values(NO.nextval,'"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
 		            	   
-		            	   
 		               }
 		               
 		               rs.close();
@@ -89,11 +89,15 @@ class RentLogin extends JDialog {
 		               e1.printStackTrace();
 		            } 
 					
+					HackSa.panel.removeAll(); //모든컴포넌트 삭제
+					HackSa.panel.revalidate(); //다시 활성화
+					HackSa.panel.repaint();    //다시 그리기
+					HackSa.panel.add(new Book()); //화면 생성.
+					HackSa.panel.setLayout(null); //레이아웃적용안함
+					
+					setVisible(false);
 			}
 			
 		});
-//		book.repaint();
 	}
 }
-	
-
