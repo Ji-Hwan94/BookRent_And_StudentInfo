@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 class RentLogin extends JDialog {
@@ -19,22 +20,23 @@ class RentLogin extends JDialog {
 	private JTextField id = new JTextField(10);
 	private JButton okBtn = new JButton("Ok");
 	
-	private static HackSa hacksa;
+//	Book book;
 	
 	Connection conn = null;
 	JButton btn = null;
 	Statement stmt;  
 	String query;
 	
+	
 	public RentLogin(JFrame frame, String title) {
 		
-		super(frame, title, true); //Î™®Îã¨Î¶¨Ïä§
+		super(frame, title, true); //∏¥ﬁ∏ÆΩ∫
 		
 		try {
-	         //DBÏó∞Í≤∞
+	         //DBø¨∞·
 	         Class.forName("oracle.jdbc.driver.OracleDriver");
 	         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
-	         //System.out.println("Ïó∞Í≤∞ÏôÑÎ£å");
+	         //System.out.println("ø¨∞·øœ∑·");
 	         stmt=conn.createStatement();
 	         }
 	      catch(Exception e) {
@@ -42,12 +44,12 @@ class RentLogin extends JDialog {
 	         }  
 		
 		setLayout(new FlowLayout());
-		JLabel nameLabel = new JLabel("Ïù¥Î¶Ñ");
+		JLabel nameLabel = new JLabel("¿Ã∏ß");
 		nameLabel.setBounds(10, 10, 80, 20);
 	    add(nameLabel);
 		add(name);
 		
-		JLabel idLabel = new JLabel("ÌïôÎ≤à");
+		JLabel idLabel = new JLabel("«–π¯");
 		idLabel.setBounds(40, 10, 80, 20);
 	    add(idLabel);
 		add(id);
@@ -57,20 +59,27 @@ class RentLogin extends JDialog {
 		okBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(name.getText().length()==0) {
-					JOptionPane.showMessageDialog(null, "Ïù¥Î¶ÑÏùÑ Îì±Î°ùÌï¥Ï£ºÏÑ∏Ïöî.");
-					return;
-				}
-				if(id.getText().length()==0) {
-					JOptionPane.showMessageDialog(null, "ÌïôÎ≤àÏùÑ ÏûÖÎ†•Ìï¥Ï£ºÏÑ∏Ïöî");
-					return;
-				}
-				try {
+				
+					if(name.getText().length()==0) {
+						JOptionPane.showMessageDialog(null, "¿Ã∏ß¿ª µÓ∑œ«ÿ¡÷ººø‰.");
+						return;
+					}
+					if(id.getText().length()==0) {
+						JOptionPane.showMessageDialog(null, "«–π¯¿ª ¿‘∑¬«ÿ¡÷ººø‰");
+						return;
+					}
+					try {
 		               Statement stmt = conn.createStatement();
 		               ResultSet rs = stmt.executeQuery("select*from student where name = '"+name.getText()+"'"); 
 		               
+		               System.out.println(Book.bookCode);
+		               
 		               while(rs.next()) {
-		            	   System.out.println(rs.getString("id"));
+		            	   
+			               System.out.println(rs.getString("id"));
+		            	   stmt.executeUpdate("insert into bookrent values('00011','"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
+		            	   
+		            	   
 		               }
 		               
 		               rs.close();
@@ -79,8 +88,11 @@ class RentLogin extends JDialog {
 		            } catch (Exception e1) {
 		               e1.printStackTrace();
 		            } 
+					
 			}
+			
 		});
+//		book.repaint();
 	}
 }
 	

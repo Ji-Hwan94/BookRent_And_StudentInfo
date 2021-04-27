@@ -32,13 +32,13 @@ public class BookChart extends JPanel {
 			        	+ "group by s.dept");
 		
 		//Create the chart
-		JFreeChart chart = ChartFactory.createPieChart("í•™ê³¼ë³„ ëŒ€ì¶œ", pieDataset, true, true, true);
+		JFreeChart chart = ChartFactory.createPieChart("ÇĞ°úº° ´ëÃâ", pieDataset, true, true, true);
 		
-		chart.getTitle().setFont(new Font("ë‹ì›€", Font.BOLD, 20));
-		chart.getLegend().setItemFont(new Font("ë‹ì›€", Font.PLAIN, 10));
+		chart.getTitle().setFont(new Font("µ¸¿ò", Font.BOLD, 20));
+		chart.getLegend().setItemFont(new Font("µ¸¿ò", Font.PLAIN, 10));
 
 		PiePlot plot = (PiePlot) chart.getPlot();
-		plot.setLabelFont(new Font("ë‹ì›€", Font.PLAIN, 12));
+		plot.setLabelFont(new Font("µ¸¿ò", Font.PLAIN, 12));
 
 		//Render the frame
 		ChartPanel chartPanel = new ChartPanel(chart);

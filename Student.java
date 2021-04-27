@@ -88,8 +88,6 @@ public class Student extends JPanel {
                   row[2] = rs.getString("dept");
                   row[3] = rs.getString("address");
                   model.addRow(row);
-            
-                  
                }
                
                rs.close();

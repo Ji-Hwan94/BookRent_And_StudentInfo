@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -30,6 +32,7 @@ public class Book extends JPanel {
    JButton btn = null;
    Statement stmt;  
    String query; // sql문을 불러온다.
+   static String bookCode;
    
 
    
@@ -65,6 +68,33 @@ public class Book extends JPanel {
       JScrollPane sp=new JScrollPane(table);
       sp.setBounds(10, 40, 460, 250);
       add(sp);  
+      
+      this.table.addMouseListener(new MouseListener() {
+          
+          @Override
+          public void mouseReleased(MouseEvent e) {}
+          
+          @Override
+          public void mousePressed(MouseEvent e) {
+        	// 현재 선택된 행의 컬럼값을 구한다.
+              bookCode = (String)model.getValueAt(table.getSelectedRow(), 0); // 학번
+          }
+          
+          @Override
+          public void mouseExited(MouseEvent e) {}
+          
+          @Override
+          public void mouseEntered(MouseEvent e) {}
+          
+          @Override
+          public void mouseClicked(MouseEvent e) {
+             // 이벤트가 발생한 컴포넌트(table)를 구한다.
+             table = (JTable)e.getComponent();
+             
+             // table의 모델을 구한다.
+             model = (DefaultTableModel)table.getModel();
+          }
+       });
       
       query = "select b.no, b.TITLE, b.AUTHOR, b.publisher, b.loan " 
          		+ "from books b order by b.no";  
@@ -106,6 +136,7 @@ public class Book extends JPanel {
 	   	
 		JButton btn;
 		HackSa hacksa;
+		String bookCode;
 		
 		public TableCell() {
 			btn = new JButton("대출");
@@ -115,7 +146,9 @@ public class Book extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					bookCode = (String)model.getValueAt(table.getSelectedRow(), 0); // 학번
 					dialog.setVisible(true);
+					System.out.println(bookCode);
 				}
 			});
 		

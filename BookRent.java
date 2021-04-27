@@ -56,13 +56,13 @@ public class BookRent extends JPanel {
                query += " order by s.id"; //앞에 한칸을 무조건 띄운다.
             } else if(cb.getSelectedIndex() == 1) {
                //유럽어문학과
-               query += " and s.dept='유럽어문학과' order by br.no";
+               query += " and s.dept='유럽어문학과' order by s.id";
             } else if(cb.getSelectedIndex() == 2) {
                //멀티미디어
-               query += " and s.dept='동양어문학과' order by br.no";
+               query += " and s.dept='동양어문학과' order by s.id";
             } else if(cb.getSelectedIndex() == 3) {
                //컴퓨터공학
-               query += " and s.dept='국문학과' order by br.no";
+               query += " and s.dept='국문학과' order by s.id";
             }
             
             //목록 출력
