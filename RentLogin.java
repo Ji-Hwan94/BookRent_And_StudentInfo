@@ -65,37 +65,43 @@ class RentLogin extends JDialog {
 					if(id.getText().length()==0) {
 						JOptionPane.showMessageDialog(null, "학번을 입력해주세요");
 						return;
-					} 
+					}
+					else if(name.getText() != Student.nameCheck){
+						JOptionPane.showMessageDialog(null, "등록되지 않은 이름 또는 학번 입니다.");
+						return;
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "대출 되었습니다.");
+						
+						try {
+			               Statement stmt = conn.createStatement();
+			               ResultSet rs = stmt.executeQuery("select*from student where name = '"+name.getText()+"'"); 
+			               
+			               System.out.println(Book.bookCode);
+			               
+			               while(rs.next()) {
+			            	   
+				               System.out.println(rs.getString("id"));
+			            	   stmt.executeUpdate("insert into bookrent values(NO.nextval,'"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
+			            	   
+			               }
+			               
+			               rs.close();
+			               stmt.close();
+			               
+			            } catch (Exception e1) {
+			               e1.printStackTrace();
+			            } 
+						
+						HackSa.panel.removeAll(); //모든컴포넌트 삭제
+						HackSa.panel.revalidate(); //다시 활성화
+						HackSa.panel.repaint();    //다시 그리기
+						HackSa.panel.add(new Book()); //화면 생성.
+						HackSa.panel.setLayout(null); //레이아웃적용안함
+						
+						setVisible(false);
+					}
 					
-					JOptionPane.showMessageDialog(null, "대출 되었습니다.");
-					
-					try {
-		               Statement stmt = conn.createStatement();
-		               ResultSet rs = stmt.executeQuery("select*from student where name = '"+name.getText()+"'"); 
-		               
-		               System.out.println(Book.bookCode);
-		               
-		               while(rs.next()) {
-		            	   
-			               System.out.println(rs.getString("id"));
-		            	   stmt.executeUpdate("insert into bookrent values(NO.nextval,'"+rs.getString("id")+"','"+Book.bookCode+"', sysdate)");
-		            	   
-		               }
-		               
-		               rs.close();
-		               stmt.close();
-		               
-		            } catch (Exception e1) {
-		               e1.printStackTrace();
-		            } 
-					
-					HackSa.panel.removeAll(); //모든컴포넌트 삭제
-					HackSa.panel.revalidate(); //다시 활성화
-					HackSa.panel.repaint();    //다시 그리기
-					HackSa.panel.add(new Book()); //화면 생성.
-					HackSa.panel.setLayout(null); //레이아웃적용안함
-					
-					setVisible(false);
 			}
 			
 		});

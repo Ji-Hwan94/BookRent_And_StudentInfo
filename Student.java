@@ -43,6 +43,9 @@ public class Student extends JPanel {
    JTable table = null;
    DefaultTableModel model = null;
    
+   static String nameCheck;
+   static String idCheck;
+   
    public Student() {
       //db connection
       try {
@@ -144,11 +147,15 @@ public class Student extends JPanel {
             model = (DefaultTableModel)table.getModel();
             
             // 현재 선택된 행의 컬럼값을 구한다.
-            tfId.setText((String)model.getValueAt(table.getSelectedRow(), 0));  // 학번
-            tfName.setText((String)model.getValueAt(table.getSelectedRow(), 1));  // 이름
+            tfName.setText((String)model.getValueAt(table.getSelectedRow(), 0));  // 이름
+            tfId.setText((String)model.getValueAt(table.getSelectedRow(), 1));  // 학번
             tfDepart.setText((String)model.getValueAt(table.getSelectedRow(), 2));  // 학과
             tfAddress.setText((String)model.getValueAt(table.getSelectedRow(), 3));  // 주소
             
+            nameCheck = (String)model.getValueAt(table.getSelectedRow(), 0);  // 이름
+            idCheck =(String)model.getValueAt(table.getSelectedRow(), 1);  // 학번
+            System.out.println(nameCheck);
+            System.out.println(idCheck);
          }
       });
       

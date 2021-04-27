@@ -29,10 +29,9 @@ public class Book extends JPanel {
    JButton btn = null;
    Statement stmt;  
    String query; // sql문을 불러온다.
+   
    static String bookCode;
-   
 
-   
    public Book() {
       
       try {
@@ -74,9 +73,7 @@ public class Book extends JPanel {
           @Override
           public void mousePressed(MouseEvent e) {
         	// 현재 선택된 행의 컬럼값을 구한다.
-              bookCode = (String)model.getValueAt(table.getSelectedRow(), 0); // 학번
-              
-              
+              bookCode = (String)model.getValueAt(table.getSelectedRow(), 0); // 책번호
           }
           
           @Override
