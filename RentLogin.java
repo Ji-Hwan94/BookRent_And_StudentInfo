@@ -1,11 +1,16 @@
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 class RentLogin extends JDialog {
@@ -16,16 +21,33 @@ class RentLogin extends JDialog {
 	
 	private static HackSa hacksa;
 	
+	Connection conn = null;
+	JButton btn = null;
+	Statement stmt;  
+	String query;
+	
 	public RentLogin(JFrame frame, String title) {
 		
-		super(frame, title, true); //��޸���
+		super(frame, title, true); //모달리스
+		
+		try {
+	         //DB연결
+	         Class.forName("oracle.jdbc.driver.OracleDriver");
+	         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
+	         //System.out.println("연결완료");
+	         stmt=conn.createStatement();
+	         }
+	      catch(Exception e) {
+	         e.printStackTrace();
+	         }  
+		
 		setLayout(new FlowLayout());
-		JLabel nameLabel = new JLabel("�̸�");
+		JLabel nameLabel = new JLabel("이름");
 		nameLabel.setBounds(10, 10, 80, 20);
 	    add(nameLabel);
 		add(name);
 		
-		JLabel idLabel = new JLabel("�й�");
+		JLabel idLabel = new JLabel("학번");
 		idLabel.setBounds(40, 10, 80, 20);
 	    add(idLabel);
 		add(id);
@@ -33,11 +55,30 @@ class RentLogin extends JDialog {
 		setSize(400, 90);
 		
 		okBtn.addActionListener(new ActionListener() {
-			RentLoginRefuse refuse = new RentLoginRefuse(hacksa, "ERROR");
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				refuse.setVisible(true);
-				setVisible(false);
+				if(name.getText().length()==0) {
+					JOptionPane.showMessageDialog(null, "이름을 등록해주세요.");
+					return;
+				}
+				if(id.getText().length()==0) {
+					JOptionPane.showMessageDialog(null, "학번을 입력해주세요");
+					return;
+				}
+				try {
+		               Statement stmt = conn.createStatement();
+		               ResultSet rs = stmt.executeQuery("select*from student where name = '"+name.getText()+"'"); 
+		               
+		               while(rs.next()) {
+		            	   System.out.println(rs.getString("id"));
+		               }
+		               
+		               rs.close();
+		               stmt.close();
+		               
+		            } catch (Exception e1) {
+		               e1.printStackTrace();
+		            } 
 			}
 		});
 	}
