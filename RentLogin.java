@@ -1,6 +1,7 @@
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,7 +12,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 class RentLogin extends JDialog {
@@ -28,13 +28,13 @@ class RentLogin extends JDialog {
 	
 	public RentLogin(JFrame frame, String title) {
 		
-		super(frame, title, true); //ëª¨ë‹¬ë¦¬ìŠ¤
+		super(frame, title, true); //¸ğ´Ş¸®½º
 		
 		try {
-	         //DBì—°ê²°
+	         //DB¿¬°á
 	         Class.forName("oracle.jdbc.driver.OracleDriver");
 	         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ora_user", "hong");
-	         //System.out.println("ì—°ê²°ì™„ë£Œ");
+	         //System.out.println("¿¬°á¿Ï·á");
 	         stmt=conn.createStatement();
 	         }
 	      catch(Exception e) {
@@ -42,12 +42,12 @@ class RentLogin extends JDialog {
 	         }  
 		
 		setLayout(new FlowLayout());
-		JLabel nameLabel = new JLabel("ì´ë¦„");
+		JLabel nameLabel = new JLabel("ÀÌ¸§");
 		nameLabel.setBounds(10, 10, 80, 20);
 	    add(nameLabel);
 		add(name);
 		
-		JLabel idLabel = new JLabel("í•™ë²ˆ");
+		JLabel idLabel = new JLabel("ÇĞ¹ø");
 		idLabel.setBounds(40, 10, 80, 20);
 	    add(idLabel);
 		add(id);
@@ -59,15 +59,15 @@ class RentLogin extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				
 					if(name.getText().length()==0) {
-						JOptionPane.showMessageDialog(null, "ì´ë¦„ì„ ë“±ë¡í•´ì£¼ì„¸ìš”.");
+						JOptionPane.showMessageDialog(null, "ÀÌ¸§À» µî·ÏÇØÁÖ¼¼¿ä.");
 						return;
 					}
 					if(id.getText().length()==0) {
-						JOptionPane.showMessageDialog(null, "í•™ë²ˆì„ ì…ë ¥í•´ì£¼ì„¸ìš”");
+						JOptionPane.showMessageDialog(null, "ÇĞ¹øÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä");
 						return;
 					} 
 					
-					JOptionPane.showMessageDialog(null, "ëŒ€ì¶œ ë˜ì—ˆìŠµë‹ˆë‹¤.");
+					JOptionPane.showMessageDialog(null, "´ëÃâ µÇ¾ú½À´Ï´Ù.");
 					
 					try {
 		               Statement stmt = conn.createStatement();
@@ -89,11 +89,11 @@ class RentLogin extends JDialog {
 		               e1.printStackTrace();
 		            } 
 					
-					HackSa.panel.removeAll(); //ëª¨ë“ ì»´í¬ë„ŒíŠ¸ ì‚­ì œ
-					HackSa.panel.revalidate(); //ë‹¤ì‹œ í™œì„±í™”
-					HackSa.panel.repaint();    //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
-					HackSa.panel.add(new Book()); //í™”ë©´ ìƒì„±.
-					HackSa.panel.setLayout(null); //ë ˆì´ì•„ì›ƒì ìš©ì•ˆí•¨
+					HackSa.panel.removeAll(); //¸ğµçÄÄÆ÷³ÍÆ® »èÁ¦
+					HackSa.panel.revalidate(); //´Ù½Ã È°¼ºÈ­
+					HackSa.panel.repaint();    //´Ù½Ã ±×¸®±â
+					HackSa.panel.add(new Book()); //È­¸é »ı¼º.
+					HackSa.panel.setLayout(null); //·¹ÀÌ¾Æ¿ôÀû¿ë¾ÈÇÔ
 					
 					setVisible(false);
 			}

@@ -1,10 +1,12 @@
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -56,13 +58,13 @@ public class BookRent extends JPanel {
                query += " order by s.id"; //앞에 한칸을 무조건 띄운다.
             } else if(cb.getSelectedIndex() == 1) {
                //유럽어문학과
-               query += " and s.dept='유럽어문학과' order by s.id";
+               query += " and s.dept='유럽어문학과' order by br.no";
             } else if(cb.getSelectedIndex() == 2) {
                //멀티미디어
-               query += " and s.dept='동양어문학과' order by s.id";
+               query += " and s.dept='동양어문학과' order by br.no";
             } else if(cb.getSelectedIndex() == 3) {
                //컴퓨터공학
-               query += " and s.dept='국문학과' order by s.id";
+               query += " and s.dept='국문학과' order by br.no";
             }
             
             //목록 출력

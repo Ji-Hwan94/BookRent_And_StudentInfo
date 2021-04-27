@@ -1,5 +1,5 @@
-import java.awt.FlowLayout;
 import java.awt.Font;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

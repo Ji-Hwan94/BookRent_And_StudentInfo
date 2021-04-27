@@ -1,10 +1,10 @@
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,13 +12,10 @@ import java.sql.Statement;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -78,6 +75,8 @@ public class Book extends JPanel {
           public void mousePressed(MouseEvent e) {
         	// 현재 선택된 행의 컬럼값을 구한다.
               bookCode = (String)model.getValueAt(table.getSelectedRow(), 0); // 학번
+              
+              
           }
           
           @Override
@@ -99,9 +98,10 @@ public class Book extends JPanel {
       query = "select b.no, b.TITLE, b.AUTHOR, b.publisher, b.loan " 
          		+ "from books b order by b.no";  
       list(); // 목록 출력
-      
       setSize(490, 400);//화면크기
       setVisible(true);
+      
+      repaint();
    }
    
    public void list(){
