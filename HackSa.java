@@ -1,3 +1,7 @@
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -8,8 +12,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -17,11 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 public class HackSa extends JFrame {
    
-   JTextField tfId = null; // Àü¿ªº¯¼ö·Î ¼³Á¤ÇÑ´Ù.
+   JTextField tfId = null; // ì „ì—­ë³€ìˆ˜ë¡œ ì„¤ì •í•œë‹¤.
    JTextField tfName = null;
    JTextField tfDepart = null;
    JTextField tfAddress = null;
@@ -32,8 +39,8 @@ public class HackSa extends JFrame {
    JButton btnSelect = null;
    JButton btnUpdate = null;
    JButton btnDelete = null;
-   
    JButton btnSearch = null;
+   //JLabel imgeLabel = null;
    
    Connection conn = null;
    
@@ -44,25 +51,35 @@ public class HackSa extends JFrame {
    
    static JPanel panel;
    
+//   íƒ€ì´í‹€ ê·¸ë¦¼ ì„¤ì • class
+   class TitleLogo extends JPanel{
+       ImageIcon icon = new ImageIcon("img/titleLogo.jpeg");
+       Image img = icon.getImage();
+       
+       public void paintComponent(Graphics g){
+           super.paintComponent(g);
+           g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+       }
+   }
+   
    public HackSa() {
-      this.setTitle("ÇĞ»ç °ü¸®");
-      
+      this.setTitle("í•™ì‚¬ ê´€ë¦¬");
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
       //db connection
       try {
-         //oracle jdbcµå¶óÀÌ¹ö ·Îµå
-         Class.forName("oracle.jdbc.driver.OracleDriver");// jdbc driver load, ÆĞÅ°Áö.CLASSÀÌ¸§
+         //oracle jdbcë“œë¼ì´ë²„ ë¡œë“œ
+         Class.forName("oracle.jdbc.driver.OracleDriver");// jdbc driver load, íŒ¨í‚¤ì§€.CLASSì´ë¦„
          //Connection
-         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","ora_user","hong");// xe : Àü¿ª µ¥ÀÌÅÍº£ÀÌ½º ÀÌ¸§(sid), ora_user: ID, hong:PW
+         conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","ora_user","hong");// xe : ì „ì—­ ë°ì´í„°ë² ì´ìŠ¤ ì´ë¦„(sid), ora_user: ID, hong:PW
          //
-         System.out.println("¿¬°á¿Ï·á");
+         System.out.println("ì—°ê²°ì™„ë£Œ");
          
          
       } catch(Exception e) {
          e.printStackTrace();
       }
-      //db close, À©µµ¿ì°¡ Á¾·á µÉ¶§ ½ÇÇà
+      //db close, ìœˆë„ìš°ê°€ ì¢…ë£Œ ë ë•Œ ì‹¤í–‰
       this.addWindowListener(new WindowListener() {
          
          @Override
@@ -79,7 +96,7 @@ public class HackSa extends JFrame {
          
          @Override
          public void windowClosing(WindowEvent e) {
-            // À©µµ¿ì°¡ close µÉ ¶§ 
+            // ìœˆë„ìš°ê°€ close ë  ë•Œ 
             try {
                if(conn != null) {
                   conn.close();
@@ -97,70 +114,71 @@ public class HackSa extends JFrame {
       });
       
       JMenuBar bar=new JMenuBar();
-      JMenu m_student=new JMenu("ÇĞ»ı°ü¸®");//File¸Ş´º
+      JMenu m_student=new JMenu("í•™ìƒê´€ë¦¬");//Fileë©”ë‰´
       bar.add(m_student);
-      JMenu m_book=new JMenu("µµ¼­°ü¸®");
+      JMenu m_book=new JMenu("ë„ì„œê´€ë¦¬");
       bar.add(m_book);
-      JMenu m_chart=new JMenu("´ëÃâ ÇöÈ²");
+      JMenu m_chart=new JMenu("ëŒ€ì¶œ í˜„í™©");
       bar.add(m_chart);
      
-      JMenuItem mi_list=new JMenuItem("ÇĞ»ıÁ¤º¸"); // ÇĞ»ı°ü¸® ºÎ°¡ ¸Ş´º
+      JMenuItem mi_list=new JMenuItem("í•™ìƒì •ë³´"); // í•™ìƒê´€ë¦¬ ë¶€ê°€ ë©”ë‰´
       m_student.add(mi_list);
+      
       mi_list.addActionListener(new ActionListener() {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-	          panel.removeAll(); //¸ğµçÄÄÆ÷³ÍÆ® »èÁ¦
-	          panel.revalidate(); //´Ù½Ã È°¼ºÈ­
-	          panel.repaint();    //´Ù½Ã ±×¸®±â
-	          panel.add(new Student()); //È­¸é »ı¼º.
-	          panel.setLayout(null); //·¹ÀÌ¾Æ¿ôÀû¿ë¾ÈÇÔ
+	          panel.removeAll(); //ëª¨ë“ ì»´í¬ë„ŒíŠ¸ ì‚­ì œ
+	          panel.revalidate(); //ë‹¤ì‹œ í™œì„±í™”
+	          panel.repaint();    //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
+	          panel.add(new Student()); //í™”ë©´ ìƒì„±.
+	          panel.setLayout(null); //ë ˆì´ì•„ì›ƒì ìš©ì•ˆí•¨
 	          setSize(316, 550);
 		}
 	});
       
       
-      JMenuItem mi_book = new JMenuItem("¸ğµç µµ¼­"); // µµ¼­°ü¸® ºÎ°¡ ¸Ş´º 1
+      JMenuItem mi_book = new JMenuItem("ëª¨ë“  ë„ì„œ"); // ë„ì„œê´€ë¦¬ ë¶€ê°€ ë©”ë‰´ 1
       m_book.add(mi_book);
       mi_book.addActionListener(new ActionListener() {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			panel.removeAll(); //¸ğµçÄÄÆ÷³ÍÆ® »èÁ¦
-            panel.revalidate(); //´Ù½Ã È°¼ºÈ­
-            panel.repaint();    //´Ù½Ã ±×¸®±â
-            panel.add(new Book()); //È­¸é »ı¼º.
-            panel.setLayout(null); //·¹ÀÌ¾Æ¿ôÀû¿ë¾ÈÇÔ
+			panel.removeAll(); //ëª¨ë“ ì»´í¬ë„ŒíŠ¸ ì‚­ì œ
+            panel.revalidate(); //ë‹¤ì‹œ í™œì„±í™”
+            panel.repaint();    //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
+            panel.add(new Book()); //í™”ë©´ ìƒì„±.
+            panel.setLayout(null); //ë ˆì´ì•„ì›ƒì ìš©ì•ˆí•¨
             setSize(500, 400);
 			
 		}
 	});
       
-      JMenuItem mi_bookRent = new JMenuItem("´ëÃâ¸ñ·Ï"); // µµ¼­°ü¸® ºÎ°¡ ¸Ş´º 2
+      JMenuItem mi_bookRent = new JMenuItem("ëŒ€ì¶œëª©ë¡"); // ë„ì„œê´€ë¦¬ ë¶€ê°€ ë©”ë‰´ 2
       m_book.add(mi_bookRent);
       mi_bookRent.addActionListener(new ActionListener() {
          
          @Override
          public void actionPerformed(ActionEvent e) {
-            panel.removeAll(); //¸ğµçÄÄÆ÷³ÍÆ® »èÁ¦
-            panel.revalidate(); //´Ù½Ã È°¼ºÈ­
-            panel.repaint();    //´Ù½Ã ±×¸®±â
-            panel.add(new BookRent()); //È­¸é »ı¼º.
-            panel.setLayout(null); //·¹ÀÌ¾Æ¿ôÀû¿ë¾ÈÇÔ
+            panel.removeAll(); //ëª¨ë“ ì»´í¬ë„ŒíŠ¸ ì‚­ì œ
+            panel.revalidate(); //ë‹¤ì‹œ í™œì„±í™”
+            panel.repaint();    //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
+            panel.add(new BookRent()); //í™”ë©´ ìƒì„±.
+            panel.setLayout(null); //ë ˆì´ì•„ì›ƒì ìš©ì•ˆí•¨
             setSize(500, 400);
             
          }
       });
       
-      JMenuItem mi_bookRead = new JMenuItem("ÇĞ°úº° ´ëÃâ");
+      JMenuItem mi_bookRead = new JMenuItem("í•™ê³¼ë³„ ëŒ€ì¶œ");
       m_chart.add(mi_bookRead);
       mi_bookRead.addActionListener(new ActionListener() {
          
          @Override
          public void actionPerformed(ActionEvent e) {
-            panel.removeAll(); //¸ğµçÄÄÆ÷³ÍÆ® »èÁ¦
-            panel.revalidate(); //´Ù½Ã È°¼ºÈ­
-            panel.repaint();    //´Ù½Ã ±×¸®±â
+            panel.removeAll(); //ëª¨ë“ ì»´í¬ë„ŒíŠ¸ ì‚­ì œ
+            panel.revalidate(); //ë‹¤ì‹œ í™œì„±í™”
+            panel.repaint();    //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
             try {
 				panel.add(new BookChart());
 			} catch (ClassNotFoundException e1) {
@@ -168,18 +186,26 @@ public class HackSa extends JFrame {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-            panel.setLayout(null); //·¹ÀÌ¾Æ¿ôÀû¿ë¾ÈÇÔ
+            panel.setLayout(null); //ë ˆì´ì•„ì›ƒì ìš©ì•ˆí•¨
             setSize(710, 500);
            
             
          }
       });
       
+//    ê¸€ì í¬ê¸° ë° í°íŠ¸
+      JLabel titleLabel = new JLabel("í•™ì‚¬ê´€ë¦¬ í”„ë¡œê·¸ë¨", SwingConstants.CENTER);
+      Font font = new Font("ë§‘ì€ ê³ ë”•", Font.ITALIC, 40);
+      titleLabel.setFont(font);
+      
+//      ë©”ë‰´ë°” ì¶”ê°€
       this.setJMenuBar(bar);
       
-      panel = new JPanel();
-      add(panel);
+//     íƒ€ì´í‹€ ì´ë¯¸ì§€ ë° ê¸€ì ì¶”ê°€
+      panel = new TitleLogo();
+      panel.add(titleLabel);
       
+      add(panel);
       
       this.setSize(700, 500);
       this.setVisible(true);
